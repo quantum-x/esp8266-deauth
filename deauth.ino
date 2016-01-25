@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <user_config.h>
-#define CHANNEL_HOP_INTERVAL 5000
+#define CHANNEL_HOP_INTERVAL 10
 
 extern "C" {
   #include "user_interface.h"
@@ -131,8 +131,12 @@ void promisc_cb(uint8_t *buf, uint16_t len)
         struct sniffer_buf *sniffer = (struct sniffer_buf*) buf;
         int i=0;
         // Check MACs
-        for (i=0; i<6; i++) if (sniffer->buf[i+4] != client[i]) return;
-        for (i=0; i<6; i++) if (sniffer->buf[i+10] != ap[i]) return;
+        for (i=0; i<6; i++) {
+          client[i] = sniffer->buf[i+4];
+        }
+        for (i=0; i<6; i++) {
+         ap[i] = sniffer->buf[i+10];
+        }
         // Update sequence number
         seq_n = sniffer->buf[23] * 0xFF + sniffer->buf[22];
     }

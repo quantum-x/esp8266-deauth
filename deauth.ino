@@ -170,6 +170,5 @@ void setup() {
 
 
 void loop() {
-  deauth();
-  delay(500);
+
 }
